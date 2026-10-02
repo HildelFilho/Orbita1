@@ -1,0 +1,22 @@
+<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Testes FSRS-5</title>
+<body style="font:16px system-ui;padding:16px;max-width:700px;margin:auto"><h1>Testes do FSRS-5</h1><ul id="o" style="line-height:1.8"></ul>
+<script type="module">
+import {PADRAO as P,R,intervalo,novoCartao,agendar,DIA} from './js/fsrs.js';
+const perto=(a,b,e=.01)=>Math.abs(a-b)<e,N=novoCartao(),t0=Date.now();
+const rev=(d)=>({...N,estado:2,S:10,D:5,last:t0-d*DIA,reps:3,due:t0});
+const T=[
+['19 parâmetros',P.w.length===19],
+['R(S,S) = 90%',perto(R(10,10),.9,1e-9)],
+['Intervalo com retenção 90% = S',intervalo(10,.9,36500)===10],
+['Novo + Bom: S = w2 = 3.173',perto(agendar(N,3,t0).S,3.173,1e-6)],
+['Novo + De novo: S = w0',perto(agendar(N,1,t0).S,0.40255,1e-6)],
+['Novo + Fácil gradua com S = w3 (≈16 dias)',(()=>{const c=agendar(N,4,t0);return c.estado===2&&perto(c.S,15.69105,1e-6)&&Math.round((c.due-t0)/DIA)===16})()],
+['D inicial (Bom) ≈ 5.28',perto(agendar(N,3,t0).D,5.2824,.01)],
+['Novo + Bom entra em aprendizado (10 min)',(()=>{const c=agendar(N,3,t0);return c.estado===1&&Math.round((c.due-t0)/6e4)===10})()],
+['Revisão: Difícil < Bom < Fácil',(()=>{const [a,b,c]=[2,3,4].map(g=>agendar(rev(10),g,t0).due);return a<b&&b<c})()],
+['Revisão com Bom aumenta a estabilidade',agendar(rev(10),3,t0).S>10],
+['Esquecer: reaprendendo, lapso e S menor',(()=>{const c=agendar(rev(10),1,t0);return c.estado===3&&c.lapses===1&&c.S<10})()],
+['Dificuldade fica entre 1 e 10',(()=>{let c=N;for(let i=0;i<30;i++)c=agendar(c,1,t0+i*DIA);return c.D>=1&&c.D<=10})()],
+];
+o.innerHTML=T.map(([n,ok])=>`<li>${ok?'✅':'❌'} ${n}</li>`).join('')+`<p><b>${T.filter(x=>x[1]).length}/${T.length}</b> testes passaram.</p>`;
+</script></body></html>

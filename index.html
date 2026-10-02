@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Órbita</title><meta name="theme-color" content="#4338ca">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg"><link rel="apple-touch-icon" href="icons/icon.svg">
+<link rel="stylesheet" href="css/app.css"></head>
+<body>
+<aside id="side" aria-label="Navegação lateral"></aside>
+<main id="view" tabindex="-1"></main>
+<nav id="tabs" aria-label="Navegação principal"></nav>
+<button id="fab" aria-label="Adicionar item">+</button>
+<dialog id="dlg"><form method="dialog"><h3>Adicionar</h3>
+<select name="tipo" aria-label="Tipo"><option value="tarefas">Tarefa</option><option value="habitos">Hábito</option></select>
+<input name="t" required maxlength="120" placeholder="Nome" aria-label="Nome" autocomplete="off">
+<menu><button value="x" formnovalidate>Cancelar</button><button value="ok" class="pri">Salvar</button></menu></form></dialog>
+<script type="module" src="js/app.js"></script>
+</body></html>
